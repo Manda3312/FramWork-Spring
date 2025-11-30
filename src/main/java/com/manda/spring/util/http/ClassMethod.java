@@ -9,13 +9,13 @@ import com.manda.spring.annotation.RequestParameter;
 import jakarta.servlet.http.HttpServletRequest;
 
 public class ClassMethod {
-    private Class <?> c;
+    private Class<?> c;
     private Method m;
 
     public ClassMethod(Class<?> c, Method m) {
         this.c = c;
         this.m = m;
-        m.setAccessible(true); // Never forget this 🗿
+        m.setAccessible(true);
     }
 
     public Object invokeMethod() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
@@ -30,6 +30,7 @@ public class ClassMethod {
 
         Parameter[] parameters = m.getParameters();
         Object[] args = new Object[parameters.length];
+
         for (int i = 0; i < parameters.length; i++) {
             Parameter p = parameters[i];
 
@@ -47,16 +48,8 @@ public class ClassMethod {
         return m.invoke(controller, args);
     }
 
-    public Class<?> getC() {
-        return c;
-    }
-    public void setC(Class<?> c) {
-        this.c = c;
-    }
-    public Method getM() {
-        return m;
-    }
-    public void setM(Method m) {
-        this.m = m;
-    }
+    public Class<?> getC() { return c; }
+    public void setC(Class<?> c) { this.c = c; }
+    public Method getM() { return m; }
+    public void setM(Method m) { this.m = m; }
 }
