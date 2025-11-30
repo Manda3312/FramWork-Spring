@@ -13,13 +13,13 @@ import com.manda.spring.servlet.route.Route;
 import jakarta.servlet.http.HttpServletRequest;
 
 public class ClassMethod {
-    private Class <?> c;
+    private Class<?> c;
     private Method m;
 
     public ClassMethod(Class<?> c, Method m) {
         this.c = c;
         this.m = m;
-        m.setAccessible(true); // Never forget this 🗿
+        m.setAccessible(true);
     }
 
     public Object invokeMethod() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
@@ -32,13 +32,12 @@ public class ClassMethod {
         Constructor<?> controllerConstructor = c.getDeclaredConstructor();
         Object controller = controllerConstructor.newInstance();
 
-        // Filling the args of the method
         Parameter[] parameters = m.getParameters();
         Object[] args = new Object[parameters.length];
-        
+
         for (int i = 0; i < parameters.length; i++) {
             Parameter parameter = parameters[i];
-            
+
             String paramName = getParameterName(parameter);
             Object paramValue = getParameterValue(paramName, parameter, req, route);
 
@@ -53,7 +52,7 @@ public class ClassMethod {
         if (rp != null) {
             return rp.value();
         }
-        
+
         PathVariable pv = parameter.getAnnotation(PathVariable.class);
         if (pv != null) {
             return pv.value();
@@ -63,13 +62,11 @@ public class ClassMethod {
     }
 
     private Object getParameterValue(String paramName, Parameter parameter, HttpServletRequest req, Route route) {
-        // 1. request.getParameter
         String value = req.getParameter(paramName);
         if (value != null) {
             return value;
         }
 
-        // 2. PathVariable
         PathVariable pv = parameter.getAnnotation(PathVariable.class);
         if (pv != null) {
             String uri = Route.getLocalURIPath(req);
@@ -84,7 +81,7 @@ public class ClassMethod {
         if (value == null) {
             if (targetType.isPrimitive()) {
                 throw new IllegalArgumentException("Required primitive parameter '" + paramName + "' is missing");
-            } else { // Objects
+            } else {
                 return null;
             }
         }
@@ -102,7 +99,6 @@ public class ClassMethod {
             } else if (targetType == String.class) {
                 return strValue;
             } else {
-                // throw new IllegalArgumentException("Unsupported parameter type: " + targetType.getSimpleName());
                 return value;
             }
         } catch (NumberFormatException e) {
@@ -110,20 +106,8 @@ public class ClassMethod {
         }
     }
 
-    /****************************
-     * Getters and setters
-     ****************************/
-
-    public Class<?> getC() {
-        return c;
-    }
-    public void setC(Class<?> c) {
-        this.c = c;
-    }
-    public Method getM() {
-        return m;
-    }
-    public void setM(Method m) {
-        this.m = m;
-    }
+    public Class<?> getC() { return c; }
+    public void setC(Class<?> c) { this.c = c; }
+    public Method getM() { return m; }
+    public void setM(Method m) { this.m = m; }
 }
