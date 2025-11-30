@@ -1,9 +1,9 @@
 package com.manda.spring.servlet;
 
 import java.io.IOException;
+import java.util.Map;
 
-import com.manda.spring.servlet.route.Route;
-import com.manda.spring.servlet.route.Router;
+import com.manda.spring.util.http.ClassMethod;
 import com.manda.spring.util.http.ResponseHandler;
 
 import jakarta.servlet.RequestDispatcher;
@@ -22,14 +22,14 @@ public class FrontServlet extends HttpServlet {
 
     RequestDispatcher defaultDispatcher;
 
-    Router router;
+    Map<String, ClassMethod> urlMethodMap;
 
     @Override
     public void init() {
         ServletContext servletContext = getServletContext();
 
         defaultDispatcher = servletContext.getNamedDispatcher("default");
-        router = (Router) servletContext.getAttribute("router");
+        urlMethodMap = (Map<String, ClassMethod>) servletContext.getAttribute("urlCmMap");
     }
 
     @Override
@@ -49,11 +49,11 @@ public class FrontServlet extends HttpServlet {
         }
     }
 
-    protected void customServe(HttpServletRequest req, HttpServletResponse res) throws IllegalArgumentException {
+    protected void customServe(HttpServletRequest req, HttpServletResponse res) throws IOException {
         String path = getLocalURIPath(req);
-        Route route = router.getRoute(path);
+        ClassMethod cm = urlMethodMap.get(path);
 
-        new ResponseHandler(getServletContext()).handleResponse(route, req, res);
+        new ResponseHandler(getServletContext()).handleResponse(cm, req, res);
     }
 
     protected void defaultServe(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
