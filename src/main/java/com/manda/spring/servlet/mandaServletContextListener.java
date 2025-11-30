@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.manda.spring.annotation.ControllerAnnotation;
+import com.manda.spring.servlet.route.Router;
 import com.manda.spring.util.http.ClassMethod;
 import com.manda.spring.util.scan.ClassScanner;
 import com.manda.spring.util.scan.MethodScanner;
@@ -20,7 +21,7 @@ public class mandaServletContextListener implements ServletContextListener{
     @Override
     public void contextInitialized(ServletContextEvent event) {
         ServletContext servletContext = event.getServletContext();
-        servletContext.setAttribute("urlCmMap", getUrlMethodMap());
+        servletContext.setAttribute("router", new Router(getUrlMethodMap()));
     }
 
     /**
